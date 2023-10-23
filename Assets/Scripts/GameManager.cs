@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour
 {
@@ -9,17 +10,25 @@ public class GameManager : MonoBehaviour
     [SerializeField] private Text Txt_Score = null;
     [SerializeField] private Text Txt_Message = null;
     private int Score = 0;
+    bool IsGameOver;
 
     void Start()
     {
+        IsGameOver = false;
         thisManager = this;
         Time.timeScale = 0;
     }
 
     void Update()
     {
-        if (Time.timeScale == 0 && Input.GetKeyDown(KeyCode.Return))
+        if (Time.timeScale == 0 && Input.GetKeyDown(KeyCode.Return) && IsGameOver == false)
+        {
             StartGame();
+        }
+        else if (Time.timeScale == 0 && Input.GetKeyDown(KeyCode.Return) && IsGameOver == true)
+        {
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        }
     }
 
     public void UpdateScore(int value)
@@ -39,6 +48,7 @@ public class GameManager : MonoBehaviour
     public void GameOver()
     {
         Time.timeScale = 0;
+        IsGameOver = true;
         Txt_Message.text = "GAMEOVER! \nPRESS ENTER TO RESTART GAME.";
         Txt_Message.color = Color.red;
     }
